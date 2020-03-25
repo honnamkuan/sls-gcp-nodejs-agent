@@ -7,9 +7,11 @@ pipeline{
         stage("Build Docker Image"){
             steps{
                 script {
-                    docker.withRegistry("https://docker.io") {
-                        def img = docker.build("honnamkuan/sls-gcp-nodejs-agent:1.0.0")
-                        img.push()
+                    docker.withServer("tcp://docker:2376", "docker-client-cert") {
+                        docker.withRegistry("https://docker.io","dockerhub-cred") {
+                            def img = docker.build("honnamkuan/sls-gcp-nodejs-agent:1.0.0")
+                            img.push()
+                        }
                     }
                 }
             }
