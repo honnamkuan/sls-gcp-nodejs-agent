@@ -7,8 +7,8 @@ pipeline{
         stage("Build Docker Image"){
             steps{
                 script {
-                    docker.withServer("tcp://docker:2376", "docker-client-cert") {
-                        docker.withRegistry("https://docker.io","dockerhub-cred") {
+                    docker.withRegistry("https://docker.io","dockerhub-cred") {
+                        docker.withServer("tcp://docker:2376", "docker-client-cert") {
                             def img = docker.build("honnamkuan/sls-gcp-nodejs-agent:1.0.0")
                             img.push()
                         }
