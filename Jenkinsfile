@@ -1,17 +1,19 @@
 pipeline{
     agent any
     tools {
-        'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker'
+         'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker'
+    }
+    environment {
+        DOCKERHUB_CRED = credentials('dockerhub-cred')
     }
     stages{
         stage("Build Docker Image"){
             steps{
                 script {
-                    docker.withRegistry("https://docker.io","dockerhub-cred") {
-                        docker.withServer("tcp://docker:2376", "docker-client-cert") {
-                            def img = docker.build("honnamkuan/sls-gcp-nodejs-agent:1.0.0")
-                            img.push()
-                        }
+                    docker.withServer("tcp://docker:2376", "docker-client-cert") {
+                        sh 'docker login -u \$DOCKERHUB_CRED_USR -p \$DOCKERHUB_CRED_PSW docker.io'
+                        def img = docker.build("honnamkuan/sls-gcp-nodejs-agent:latest")
+                        img.push()
                     }
                 }
             }
