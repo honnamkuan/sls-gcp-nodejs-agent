@@ -12,6 +12,9 @@ pipeline {
     triggers {
         cron(cron_config)
     }
+    options {
+        disableConcurrentBuilds()
+    }
     stages {
         stage("Build Docker Image") {
             steps {
