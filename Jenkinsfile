@@ -1,5 +1,6 @@
 
-String cron_config = BRANCH_NAME == 'master' ? '0 0 1 * *' : ''
+String cron_config = env.BRANCH_NAME == 'master' ? '0 0 1 * *' : ''
+
 
 pipeline {
     agent any
@@ -27,6 +28,19 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            mail to: env.EMAIL_TO, 
+                body: "${env.BUILD_URL} completed successfully", 
+                subject: "FAIL: ${env.BUILD_TAG}"
+        }
+        failure {
+            mail to: env.EMAIL_TO, 
+                body: "${env.BUILD_URL} completed with failure", 
+                subject: "SUCCESS: ${env.BUILD_TAG}"
         }
     }
 }
