@@ -3,9 +3,8 @@ String cron_config = env.BRANCH_NAME == 'master' ? '0 0 1 * *' : ''
 
 
 pipeline {
-    agent any
-    tools {
-         'org.jenkinsci.plugins.docker.commons.tools.DockerTool' 'docker'
+    agent {
+        label 'dind'
     }
     environment {
         DOCKERHUB_CRED = credentials('dockerhub-cred')
@@ -20,12 +19,10 @@ pipeline {
         stage("Build Docker Image") {
             steps {
                 script {
-                    docker.withServer("tcp://docker:2376", "docker-client-cert") {
-                        sh """docker login -u \$DOCKERHUB_CRED_USR -p \$DOCKERHUB_CRED_PSW docker.io
+                    sh """docker login -u \$DOCKERHUB_CRED_USR -p \$DOCKERHUB_CRED_PSW docker.io
                         docker build --pull -t \$DOCKERHUB_CRED_USR/sls-gcp-nodejs-agent:\$BRANCH_NAME .
                         docker push \$DOCKERHUB_CRED_USR/sls-gcp-nodejs-agent:\$BRANCH_NAME
-                        """
-                    }
+                    """
                 }
             }
         }
