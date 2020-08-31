@@ -14,6 +14,7 @@ pipeline {
     }
     options {
         disableConcurrentBuilds()
+        timeout time: 60
     }
     stages {
         stage("Build Docker Image") {
