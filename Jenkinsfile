@@ -31,14 +31,16 @@ pipeline {
 
     post {
         success {
-            mail to: env.EMAIL_TO, 
-                body: "${env.BUILD_URL} completed successfully", 
-                subject: "SUCCESS: ${env.BUILD_TAG}"
+            emailext to: env.EMAIL_TO, 
+                body: "${env.BUILD_URL} completed successfully in ${currentBuild.durationString}", 
+                subject: "SUCCESS: ${env.BUILD_TAG}",
+                attachLog: true
         }
         failure {
-            mail to: env.EMAIL_TO, 
-                body: "${env.BUILD_URL} completed with failure", 
-                subject: "FAIL: ${env.BUILD_TAG}"
+            emailext to: env.EMAIL_TO, 
+                body: "${env.BUILD_URL} completed with failure in ${currentBuild.durationString}", 
+                subject: "FAIL: ${env.BUILD_TAG}",
+                attachLog: true
         }
     }
 }
