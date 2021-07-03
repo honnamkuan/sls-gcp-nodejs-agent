@@ -3,7 +3,7 @@ FROM jenkins/jnlp-slave:latest
 USER root
 
 RUN apt-get update
-RUN apt-get install -y dnsutils
+RUN apt-get install -y dnsutils python3
 
 ENV NVM_DIR /root/.nvm
 ENV NODE_VERSION 12.16.1
